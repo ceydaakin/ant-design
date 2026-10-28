@@ -458,4 +458,23 @@ describe('Card', () => {
     expect(container.querySelector('.ant-card-meta-title')?.textContent).toBe('0');
     expect(container.querySelector('.ant-card-meta-description')?.textContent).toBe('0');
   });
+
+  // https://github.com/ant-design/ant-design/issues/59725
+  it('should not override display of link Button in actions', () => {
+    render(
+      <Card
+        actions={[
+          <Button key="link" href="#" icon={<span>icon</span>}>
+            Link
+          </Button>,
+        ]}
+      />,
+    );
+
+    const cssText = Array.from(document.head.querySelectorAll('style'))
+      .map((style) => style.innerHTML)
+      .join('');
+
+    expect(cssText.includes('.ant-card-actions>li >span a:not(.ant-btn)')).toBe(true);
+  });
 });
